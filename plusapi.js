@@ -1073,10 +1073,10 @@ GooglePlusAPI = {
 							type      : attachment[24][3]
 						},
 						fullImage : {
-							url       : attachment[5][1],
-							type      : attachment[24][3],
-							height    : attachment[5][2],
-							width     : attachment[5][3]
+							url       : (typeof(attachment[5]) != "object") ? "" : attachment[5][1],
+							type      : (typeof(attachment[5]) != "object") ? "" : attachment[24][3],
+							height    : (typeof(attachment[5]) != "object") ? "" : attachment[5][2],
+							width     : (typeof(attachment[5]) != "object") ? "" : attachment[5][3]
 						}
 					});
 				}
