@@ -187,14 +187,34 @@ function responseJSON(req, res, json) {
 		body = JSON.stringify(json);
 	}
 
+	/*
+	 * for Content-Length
+	 * ************************************** */
+	var bodyByte = (function(body){
+		var l = body.length;
+		for(var c = i = n = 0; i < l; i ++){
+			n = body.charCodeAt(i);
+			if(n < 0x80) {
+				c ++;
+			} else if(n < 0x800 || (n > 0xd7ff && n < 0xe000)) {
+				c += 2;
+			} else {
+				c += 3;
+			}
+		}
+		return c;
+	})(body);
+
 	if (req.query.callback) {
 		res.header('Content-Type', 'text/javascript');
+		res.header('Content-Length', bodyByte);
 		res.send('// API callback\n'
 			+ 'if (typeof ' + req.query.callback + ' == "function") '
 			+ req.query.callback + '(' + body + ');');
 	}
 	else {
 		res.header('Content-Type', 'application/json');
+		res.header('Content-Length', bodyByte);
 		res.send(body);
 	}
 }
